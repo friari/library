@@ -1,4 +1,8 @@
-
+// TODO: set book data attributes for 
+// book title and author,
+// then in remove book function grab indexOf
+// where book.title & book.author are same
+// using Array.find ?
 const form = document.querySelector('[data-form]');
 const formContainer = document.querySelector('[data-form-container]');
 const formToggleBtn = document.querySelector('[data-form-toggle]');
@@ -61,6 +65,12 @@ function buildLibrary(container) {
   });
 }
 
+function removeBook(index, bookID, container) {
+  myLibrary.splice(index, 1);
+  container.querySelector(`#${bookID}`).remove();
+  buildLibrary(container);
+}
+
 function buildCardRead(book, index) {
   // Read Checkbox
   const cardReadContainer = document.createElement('div');
@@ -72,7 +82,10 @@ function buildCardRead(book, index) {
   cardReadCheckbox.setAttribute('name', 'read');
   cardReadCheckbox.setAttribute('id', `read-book-${index}`)
   cardReadCheckbox.checked = book.read;
-  cardReadCheckbox.addEventListener('change', book.changeReadStatus.bind(book));
+  cardReadCheckbox.addEventListener('change', () => {
+    book.changeReadStatus();
+    cardReadLabel.innerText = book.read ? "Read" : "Haven't read";
+  });
 
   const cardReadLabel = document.createElement("label");
   cardReadLabel.className = 'book-card__read-label';
@@ -112,11 +125,17 @@ function buildCard(book, index, container) {
   // Read Checkbox
   const cardReadContainer = buildCardRead(book, index);
 
+  // Remove book button
+  const cardRemoveBtn = document.createElement('button');
+  cardRemoveBtn.innerText = "Remove book from library";
+  cardRemoveBtn.addEventListener('click', () => removeBook(index, bookID, container));
+
   // Building Card
   card.appendChild(cardTitle);
   card.appendChild(cardAuthor);
   card.appendChild(cardPages);
-  card.appendChild(cardReadContainer)
+  card.appendChild(cardReadContainer);
+  card.appendChild(cardRemoveBtn);
 
   container.appendChild(card);
 }
