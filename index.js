@@ -43,7 +43,7 @@ function onFormSubmit(e) {
   buildLibrary(mainContainer);
 
   formElem.reset();
-  formElem.classList.add('hidden');
+  formToggle(formContainer);
 }
 
 function addBookToLibrary(book) {
@@ -71,6 +71,7 @@ function buildCardRead(book, index) {
   const cardReadLabel = document.createElement("label");
   cardReadLabel.className = 'book-card__read-label';
   cardReadLabel.setAttribute('for', `read-book-${index}`);
+  cardReadLabel.innerText = book.read ? "Read" : "Haven't read";
 
   // Building Card Checkbox Elem
   cardReadContainer.appendChild(cardReadCheckbox);
@@ -79,7 +80,7 @@ function buildCardRead(book, index) {
   return cardReadContainer;
 }
 
-function buildCard(book, index) {
+function buildCard(book, index, container) {
   const bookID = `book-${index}`;
   if (document.getElementById(bookID)) return;
 
