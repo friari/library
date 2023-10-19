@@ -3,17 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Library</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main>
     <div class="sidebar">
-      <div class="sidebar-form">
-
+      <div class="sidebar-form-toggle">
+        <button data-form-toggle>
+          Add book to library?
+        </button>
+      </div>
+      <div class="sidebar-form" data-form-container>
+        <form action="/" method="post" data-form>
+          <div class="input-group">
+            <label for="title" class="input-group__label">
+              Title
+            </label>
+            <input type="text" id="title" name="title" class="input-group__input" placeholder="Title">
+          </div>
+          <div class="input-group">
+            <label for="author" class="input-group__label">
+              Author
+            </label>
+            <input type="text" id="author" name="author" class="input-group__input" placeholder="Author">
+          </div>
+          <div class="input-group">
+            <label for="pages" class="input-group__label">
+              Pages
+            </label>
+            <input type="text" id="pages" name="pages" class="input-group__input" placeholder="Pages">
+          </div>
+          <div class="input-group input-group--checkbox">
+            <input type="checkbox" name="read" id="read">
+            <label for="read">
+              Read?
+            </label>
+          </div>
+          <input type="submit" value="Submit">
+        </form>
       </div>
     </div>
-    <div class="book-cards">
+    <div class="book-cards" data-library-main>
 
     </div>
   </main>

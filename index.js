@@ -1,3 +1,9 @@
+
+const form = document.querySelector('[data-form]');
+const formContainer = document.querySelector('[data-form-container]');
+const formToggleBtn = document.querySelector('[data-form-toggle]');
+const mainContainer = document.querySelector('[data-library-main]');
+
 const myLibrary = [];
 
 function Book(title, author, pages, read) {
@@ -10,15 +16,107 @@ function Book(title, author, pages, read) {
   }
 }
 
+function formToggle(formContainer) {
+  console.log(formContainer);
+  if (formContainer.classList.contains('hidden')) {
+    formContainer.classList.remove('hidden');
+    return;
+  }
+
+  formContainer.classList.add('hidden');
+}
+
+function onFormSubmit(e) {
+  e.preventDefault();
+  const formElem = e.target;
+  const formData = new FormData(formElem);
+
+  const bookTitle = formData.get('title');
+  const bookAuthor = formData.get('author');
+  const bookPages = formData.get('pages');
+  const haveRead = formData.get('read') ? true : false;
+
+  const currentBook = new Book(bookTitle, bookAuthor, bookPages, haveRead);
+
+  addBookToLibrary(currentBook);
+
+  buildLibrary(mainContainer);
+
+  formElem.reset();
+  formElem.classList.add('hidden');
+}
+
 function addBookToLibrary(book) {
   myLibrary.push(book);
 }
 
-function buildLibrary() {
-  myLibrary.forEach(book => {
-    const card = document.createElement('div');
-    const cardTitle = document.createElement('h3');
-    const cardAuthor = document.createElement('h4');
-    const cardRead = document.createElement('div');
-  })
+function buildLibrary(container) {
+  myLibrary.forEach((book, index) => {
+    buildCard(book, index, container);
+  });
 }
+
+function buildCardRead(book, index) {
+  // Read Checkbox
+  const cardReadContainer = document.createElement('div');
+  cardReadContainer.className = 'book-card__read-container';
+
+  const cardReadCheckbox = document.createElement('input');
+  cardReadCheckbox.className = 'book-card__read-checkbox';
+  cardReadCheckbox.setAttribute('type', 'checkbox');
+  cardReadCheckbox.setAttribute('name', 'read');
+  cardReadCheckbox.setAttribute('id', `read-book-${index}`)
+  cardReadCheckbox.checked = book.read;
+
+  const cardReadLabel = document.createElement("label");
+  cardReadLabel.className = 'book-card__read-label';
+  cardReadLabel.setAttribute('for', `read-book-${index}`);
+
+  // Building Card Checkbox Elem
+  cardReadContainer.appendChild(cardReadCheckbox);
+  cardReadContainer.appendChild(cardReadLabel);
+
+  return cardReadContainer;
+}
+
+function buildCard(book, index) {
+  const bookID = `book-${index}`;
+  if (document.getElementById(bookID)) return;
+
+  const card = document.createElement('div');
+  card.className = 'book-card';
+  card.setAttribute('id', bookID);
+
+  // Title
+  const cardTitle = document.createElement('h3');
+  cardTitle.className = 'book-card__title';
+  cardTitle.innerText = book.title;
+
+  // Author
+  const cardAuthor = document.createElement('h4');
+  cardAuthor.className = 'book-card__author';
+  cardAuthor.innerText = book.author;
+
+  // Pages
+  const cardPages = document.createElement('p');
+  cardPages.className = 'book-card__pages';
+  cardPages.innerText = `Pages: ${book.pages}`;
+
+  // Read Checkbox
+  const cardReadContainer = buildCardRead(book, index);
+
+  // Building Card
+  card.appendChild(cardTitle);
+  card.appendChild(cardAuthor);
+  card.appendChild(cardPages);
+  card.appendChild(cardReadContainer)
+
+  container.appendChild(card);
+}
+
+// Event Listeners
+form.addEventListener('submit', onFormSubmit);
+formToggleBtn.addEventListener('click', () => {
+  console.log('clicked');
+  formToggle(formContainer);
+});
