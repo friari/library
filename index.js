@@ -14,15 +14,20 @@ function Book(title, author, pages, read) {
   this.info = function() {
     return `${this.title} by ${this.author}, ${this.pages} pages, ${read ? 'have read' : 'not read yet'}`
   }
+  this.changeReadStatus = function() {
+    this.read = !this.read;
+    return;
+  }
 }
 
 function formToggle(formContainer) {
-  console.log(formContainer);
   if (formContainer.classList.contains('hidden')) {
     formContainer.classList.remove('hidden');
+    formToggleBtn.classList.add('hidden');
     return;
   }
 
+  formToggleBtn.classList.remove('hidden');
   formContainer.classList.add('hidden');
 }
 
@@ -67,6 +72,7 @@ function buildCardRead(book, index) {
   cardReadCheckbox.setAttribute('name', 'read');
   cardReadCheckbox.setAttribute('id', `read-book-${index}`)
   cardReadCheckbox.checked = book.read;
+  cardReadCheckbox.addEventListener('change', book.changeReadStatus.bind(book));
 
   const cardReadLabel = document.createElement("label");
   cardReadLabel.className = 'book-card__read-label';
@@ -117,7 +123,4 @@ function buildCard(book, index, container) {
 
 // Event Listeners
 form.addEventListener('submit', onFormSubmit);
-formToggleBtn.addEventListener('click', () => {
-  console.log('clicked');
-  formToggle(formContainer);
-});
+formToggleBtn.addEventListener('click', () => formToggle(formContainer));

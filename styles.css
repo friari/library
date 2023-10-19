@@ -41,6 +41,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-template-rows: min(250px);
+  grid-auto-rows: min(250px);
   column-gap: 1.5rem;
   row-gap: 1.5rem;
   align-items: flex-start;
