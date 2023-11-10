@@ -1,10 +1,10 @@
 class Book {
-  constructor(title, author,  pages, read, counterVal) {
+  constructor({ title, author,  pages, read, bookId }) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.read = read;
-    this.bookId = title.toLowerCase().split(" ").concat(author.toLowerCase().split(" ")).join("-");
+    this.bookId = bookId || title.toLowerCase().split(" ").concat(author.toLowerCase().split(" ")).join("-");
   }
 
   info() {
@@ -71,8 +71,15 @@ class Book {
 }
 
 class Library {
-  constructor() {
+  constructor(books) {
     this.books = [];
+
+    if (books && books.length > 0) {
+      for (let i = 0; i < books.length; i++) {
+        let book = new Book (books[i]);
+        this.books.push(book);
+      }
+    }
   }
 
   addBook(book) {
@@ -90,7 +97,11 @@ class Library {
   }
 }
 
-const myLibrary = new Library();
+const booksInStorage = JSON.parse(localStorage.getItem("myBooks"));
+
+console.log(booksInStorage);
+
+const myLibrary = new Library(booksInStorage);
 
 const form = document.querySelector('[data-form]');
 const formContainer = document.querySelector('[data-form-container]');
@@ -118,9 +129,15 @@ function onFormSubmit(e) {
   const bookPages = formData.get('pages');
   const haveRead = formData.get('read') ? true : false;
 
-  const currentBook = new Book(bookTitle, bookAuthor, bookPages, haveRead);
+  const currentBook = new Book({
+    title: bookTitle,
+    author: bookAuthor,
+    pages: bookPages,
+    read: haveRead,
+  });
 
   myLibrary.addBook(currentBook);
+  localStorage.setItem("myBooks", JSON.stringify(myLibrary.books));
 
   buildLibrary(mainContainer);
 
@@ -139,3 +156,5 @@ function buildLibrary(container) {
 // Event Listeners
 form.onsubmit = onFormSubmit;
 formToggleBtn.onclick = () => formToggle(formContainer);
+
+document.addEventListener("DOMContentLoaded", () => buildLibrary(mainContainer));
