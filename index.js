@@ -59,6 +59,12 @@ class Book {
     cardReadCheckbox.onchange = () => {
       this.changeReadStatus();
       cardReadLabel.innerText = this.read ? "Read" : "Haven't read";
+      const savedBooks = JSON.parse(localStorage.getItem("myBooks"));
+      const currentBook = savedBooks.find(item => item.bookId === this.bookId);
+      if (currentBook) {
+        savedBooks[savedBooks.indexOf(currentBook)].read = this.read;
+        localStorage.setItem("myBooks", JSON.stringify(savedBooks));
+      }
     }
 
     cardRemoveBtn.onclick = () => { 
