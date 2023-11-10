@@ -7,7 +7,6 @@ class Book {
     this.bookId = title.toLowerCase().split(" ").concat(author.toLowerCase().split(" ")).join("-");
   }
 
-
   info() {
     return `${this.title} by ${this.author}, ${this.pages} pages, ${read ? 'have read' : 'not read yet'}`
   }
