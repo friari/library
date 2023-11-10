@@ -15,6 +15,15 @@ class Book {
     this.read = !this.read;
   }
 
+  #updateLocalStorage() {
+    const savedBooks = JSON.parse(localStorage.getItem("myBooks"));
+    const currentBook = savedBooks.find(item => item.bookId === this.bookId);
+    if (currentBook) {
+      savedBooks[savedBooks.indexOf(currentBook)].read = this.read;
+      localStorage.setItem("myBooks", JSON.stringify(savedBooks));
+    }
+  }
+
   buildCard(index, library) {
     if (document.getElementById(this.bookId)) return;
 
@@ -59,12 +68,7 @@ class Book {
     cardReadCheckbox.onchange = () => {
       this.changeReadStatus();
       cardReadLabel.innerText = this.read ? "Read" : "Haven't read";
-      const savedBooks = JSON.parse(localStorage.getItem("myBooks"));
-      const currentBook = savedBooks.find(item => item.bookId === this.bookId);
-      if (currentBook) {
-        savedBooks[savedBooks.indexOf(currentBook)].read = this.read;
-        localStorage.setItem("myBooks", JSON.stringify(savedBooks));
-      }
+      this.#updateLocalStorage();
     }
 
     cardRemoveBtn.onclick = () => { 
@@ -104,9 +108,6 @@ class Library {
 }
 
 const booksInStorage = JSON.parse(localStorage.getItem("myBooks"));
-
-console.log(booksInStorage);
-
 const myLibrary = new Library(booksInStorage);
 
 const form = document.querySelector('[data-form]');
